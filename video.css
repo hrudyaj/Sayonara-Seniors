@@ -1,0 +1,65 @@
+/* --- 4. Memory Lane Video Section --- */
+.section-video {
+    background-color: var(--bg-color);
+    padding: 5rem 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Cinematic subtle vignette shadow to make the video pop and add classic retro feel */
+.section-video::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, transparent 30%, rgba(60, 52, 40, 0.5) 120%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.section-video .section-title {
+    position: relative;
+    z-index: 2;
+}
+
+.video-container {
+    width: 100%;
+    max-width: 1000px;
+    /* Made slightly wider */
+    height: 95vh;
+    width: 65vh;
+    /* Enlarged frame */
+    background: #000;
+    padding: 15px;
+    /* Larger padding to look like a thick tv/frame bezel */
+    border: 1px solid var(--text-primary);
+    box-shadow: 15px 15px 0px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+.retro-video {
+    width: auto;
+    max-width: 65vh;
+    height: 95vh;
+    max-height: calc(95vh - 60px);
+    border: 2px solid #333;
+    filter: sepia(0.3) contrast(1.1);
+    /* Adds retro feel to any video */
+}
+
+.video-caption {
+    font-family: var(--font-body);
+    color: #e0e0e0;
+    margin-top: 15px;
+    font-style: italic;
+    font-size: 0.9rem;
+}

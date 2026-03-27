@@ -1,0 +1,47 @@
+/* --- Floating Gramophone Player --- */
+.gramophone-container {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: var(--bg-color);
+    padding: 10px 20px;
+    border: 2px solid var(--text-primary);
+    border-radius: 50px;
+    box-shadow: 4px 4px 0px var(--text-primary);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.gramophone-container:hover {
+    transform: translateY(-2px);
+    box-shadow: 6px 6px 0px var(--text-primary);
+}
+
+.gramophone-icon {
+    font-size: 2rem;
+    color: var(--text-primary);
+}
+
+.gramophone-icon.playing {
+    animation: spinRecord 2s linear infinite;
+}
+
+.music-note {
+    font-size: 1rem;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-weight: bold;
+    text-transform: uppercase;
+    user-select: none;
+}
+
+@keyframes spinRecord {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+

@@ -1,0 +1,429 @@
+/* --- 3. Archive Selection & Rotary Dial Section --- */
+.section-archive-dial {
+    background: var(--bg-dark);
+}
+
+.section-subtitle {
+    font-size: 1.2rem;
+    font-style: italic;
+    color: var(--text-secondary);
+    margin-bottom: 3rem;
+    text-align: center;
+}
+
+.archive-dial-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4rem;
+    width: 100%;
+    max-width: 1200px;
+    overflow: hidden;
+    /* prevents layout breakage */
+}
+
+@media (min-width: 1024px) {
+    .archive-dial-layout {
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+    }
+}
+
+/* Antique Rotary Dial */
+.rotary-wrapper {
+    position: relative;
+    width: 320px;
+    height: 320px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.rotary-base {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background: #111;
+    /* Black vintage plastic */
+    border-radius: 50%;
+    box-shadow: inset -5px -5px 15px rgba(255, 255, 255, 0.2), 10px 10px 20px rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 5px solid #222;
+}
+
+.rotary-plate {
+    position: absolute;
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    /* Transparent to see numbers behind or represent plastic wheel */
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    z-index: 2;
+    transform: rotate(0deg);
+}
+
+.dial-hole {
+    position: absolute;
+    width: 46px;
+    height: 46px;
+    background: #f4ebd0;
+    /* Paper color shining through */
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    margin-top: -23px;
+    margin-left: -23px;
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.8), 0 0 0 4px #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Position holes using transforms. Dial logic calculates angles */
+.hole-1 {
+    transform: rotate(30deg) translateY(-95px);
+}
+
+.hole-2 {
+    transform: rotate(90deg) translateY(-95px);
+}
+
+.hole-3 {
+    transform: rotate(150deg) translateY(-95px);
+}
+
+.hole-4 {
+    transform: rotate(210deg) translateY(-95px);
+}
+
+.hole-5 {
+    transform: rotate(270deg) translateY(-95px);
+}
+
+.hole-6 {
+    transform: rotate(330deg) translateY(-95px);
+}
+
+/* Counter rotate text so it is upright */
+.hole-1 .hole-num {
+    transform: rotate(-30deg);
+}
+
+.hole-2 .hole-num {
+    transform: rotate(-90deg);
+}
+
+.hole-3 .hole-num {
+    transform: rotate(-150deg);
+}
+
+.hole-4 .hole-num {
+    transform: rotate(-210deg);
+}
+
+.hole-5 .hole-num {
+    transform: rotate(-270deg);
+}
+
+.hole-6 .hole-num {
+    transform: rotate(-330deg);
+}
+
+.hole-num {
+    font-family: var(--font-heading);
+    color: #111;
+    font-weight: bold;
+    font-size: 1.2rem;
+    pointer-events: none;
+}
+
+.rotary-center {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    background: #e2d7ba;
+    border-radius: 50%;
+    z-index: 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5), 0 5px 10px rgba(0, 0, 0, 0.5);
+    font-family: var(--font-body);
+    font-weight: bold;
+    color: var(--color-red);
+    cursor: pointer;
+    border: 3px solid var(--color-gold);
+    transition: all 0.1s;
+}
+
+.rotary-center:active {
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.8);
+    transform: scale(0.95);
+}
+
+.rotary-stopper {
+    position: absolute;
+    bottom: 25px;
+    right: 25px;
+    width: 40px;
+    height: 12px;
+    background: linear-gradient(to right, #b38b22, #ebd581);
+    /* Brass stopper */
+    border-radius: 6px;
+    transform: rotate(-45deg);
+    z-index: 4;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
+}
+
+/* Archives Folder Horizontal Slider */
+.horizontal-slider {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    width: 100%;
+    max-width: 800px;
+    padding: 20px 10px 30px 10px;
+    /* Space for box-shadows and tabs */
+    gap: 1.5rem;
+    scroll-behavior: smooth;
+    /* Optional scroll-snapping for cleaner scroll */
+    scroll-snap-type: x mandatory;
+}
+
+/* Custom Webkit scrollbar for the retro vibe slider */
+.horizontal-slider::-webkit-scrollbar {
+    height: 10px;
+}
+
+.horizontal-slider::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+}
+
+.horizontal-slider::-webkit-scrollbar-thumb {
+    background: var(--color-sepia);
+    border-radius: 10px;
+}
+
+/* Redesign memory card into a Manila Folder */
+.archive-folder {
+    flex: 0 0 250px;
+    height: 160px;
+    scroll-snap-align: center;
+    background: #e1c699;
+    /* Vintage manila paper */
+    border: 1px solid #c9b085;
+    border-radius: 0 10px 10px 10px;
+    /* Flat top left where tab usually is */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.15);
+}
+
+.archive-folder:hover {
+    transform: translateY(-8px);
+    box-shadow: 8px 12px 0px rgba(0, 0, 0, 0.15);
+}
+
+/* The folder tab */
+.archive-folder::before {
+    content: '';
+    position: absolute;
+    top: -16px;
+    left: -1px;
+    width: 90px;
+    height: 16px;
+    background: #e1c699;
+    border: 1px solid #c9b085;
+    border-bottom: none;
+    border-radius: 10px 10px 0 0;
+}
+
+/* Adjusted structural components inside folder */
+.card-number {
+    position: absolute;
+    top: -15px;
+    left: 10px;
+    font-size: 1.1rem;
+    /* Shrink to fit tab */
+    font-family: var(--font-heading);
+    color: var(--color-sepia);
+    font-weight: 700;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.card-inner {
+    text-align: center;
+    padding: 1rem;
+    position: relative;
+    z-index: 2;
+}
+
+.card-inner h3 {
+    font-size: 1.1rem;
+    font-family: var(--font-body);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    color: var(--text-primary);
+}
+
+.icon-stamp {
+    font-size: 2rem;
+    opacity: 0.8;
+    color: var(--color-red);
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(60, 52, 40, 0.8);
+    backdrop-filter: sepia(0.5);
+}
+
+.modal-content {
+    background-color: var(--bg-color);
+    margin: 10% auto;
+    padding: 0;
+    border: 3px solid var(--color-sepia);
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 10px 10px 0px var(--text-primary);
+    opacity: 0;
+}
+
+.modal-header {
+    background: var(--color-sepia);
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #f4ebd0;
+    border-bottom: 2px solid var(--text-primary);
+}
+
+.modal-header h2 {
+    font-size: 1.2rem;
+    margin: 0;
+    font-family: var(--font-body);
+}
+
+.close-btn {
+    color: #f4ebd0;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.modal-body {
+    padding: 2rem;
+    text-align: center;
+}
+
+/* Modal Inner Images Carousel */
+.carousel-wrapper {
+    position: relative;
+    height: 300px;
+    background: var(--bg-dark);
+    border: 1px dashed var(--color-sepia);
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.carousel-container {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.carousel-track {
+    display: flex;
+    height: 100%;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.carousel-slide {
+    min-width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+.carousel-slide img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border: 5px solid #fff;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+    transform: rotate(-1deg);
+}
+
+.carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    border: 2px solid #fff;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10;
+    font-size: 1.2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0.8;
+    transition: opacity 0.2s, background 0.2s;
+}
+
+.carousel-nav:hover {
+    opacity: 1;
+    background: var(--color-sepia);
+}
+
+#carousel-prev {
+    left: 10px;
+}
+
+#carousel-next {
+    right: 10px;
+}
+
+.caption {
+    font-size: 1.2rem;
+    font-family: var(--font-body);
+    font-weight: bold;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+    font-style: italic;
+}
+
+.description {
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+

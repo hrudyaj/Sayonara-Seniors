@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sayonara Seniors | Retro Farewell</title>
+    <!-- Use Google Fonts for Retro Vibe -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Dancing+Script:wght@700&family=Outfit:wght@800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=2">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Audio Player -->
+    <audio id="bg-music" loop>
+        <source src="music.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <div id="music-toggle" class="gramophone-container">
+        <i class="fa-solid fa-compact-disc gramophone-icon" id="record-icon"></i>
+        <span class="music-note" id="music-text">Play Music</span>
+    </div>
+
+    <!-- Film Grain Overlay -->
+    <div class="film-grain"></div>
+
+    <!-- 1. Landing Section -->
+    <section id="landing" class="section-landing">
+
+
+        <!-- Scattered Retro Background -->
+        <div class="retro-scatter">
+            <i class="fa-solid fa-camera-retro r-icon i1"></i>
+            <i class="fa-solid fa-film r-icon i2"></i>
+            <i class="fa-solid fa-compact-disc r-icon i3"></i>
+            <i class="fa-solid fa-phone-volume r-icon i4"></i>
+            <i class="fa-solid fa-camera r-icon i5"></i>
+
+            <div class="polaroid-scatter p1"></div>
+            <div class="polaroid-scatter p2"></div>
+            <div class="polaroid-scatter p3"></div>
+
+            <!-- Fairy light dots -->
+            <div class="fairy-light f1"></div>
+            <div class="fairy-light f2"></div>
+            <div class="fairy-light f3"></div>
+            <div class="fairy-light f4"></div>
+            <div class="fairy-light f5"></div>
+            <div class="fairy-light f6"></div>
+            <div class="fairy-light f7"></div>
+            <div class="fairy-light f8"></div>
+        </div>
+
+        <div class="landing-content">
+            <h1 class="cursive-sayonara">Sayonara</h1>
+            <h2 class="modern-seniors">Seniors batch 2022-26</h2>
+            <p class="subtitle">You can leave the hostel... but can you leave the memories?</p>
+        </div>
+
+    </section>
+
+    <!-- 2. Retro Film Roll Section (25 Images) -->
+    <section id="film-roll" class="section-film">
+        <h2 class="section-title">Reel of Memories</h2>
+        <div class="film-strip-wrapper">
+            <div class="film-strip-track" id="dynamic-film-track">
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Merged Section: Archives & Rotary Dial -->
+    <section id="archive-selection" class="section-archive-dial">
+        <h2 class="section-title">The Archives</h2>
+        <p class="section-subtitle">Select a specific file manually, or spin the antique dial.</p>
+
+        <div class="archive-dial-layout">
+            <!-- Rotary Telephone Dial -->
+            <div class="rotary-wrapper">
+                <div class="rotary-base">
+                    <div class="rotary-plate" id="rotary-plate">
+                        <div class="dial-hole hole-1"><span class="hole-num">1</span></div>
+                        <div class="dial-hole hole-2"><span class="hole-num">2</span></div>
+                        <div class="dial-hole hole-3"><span class="hole-num">3</span></div>
+                        <div class="dial-hole hole-4"><span class="hole-num">4</span></div>
+                        <div class="dial-hole hole-5"><span class="hole-num">5</span></div>
+                        <div class="dial-hole hole-6"><span class="hole-num">6</span></div>
+                    </div>
+                    <div class="rotary-center" id="spin-btn">SPIN</div>
+                    <div class="rotary-stopper"></div>
+                </div>
+            </div>
+
+            <!-- Memory Windows Horizontal Slider (Folders) -->
+            <div class="windows-container horizontal-slider">
+                <div class="memory-card archive-folder" data-id="1">
+                    <span class="card-number">1</span>
+                    <div class="card-inner">
+                        <h3>College events</h3>
+                        <div class="icon-stamp"><i class="fa-solid fa-building-columns"></i></div>
+                    </div>
+                </div>
+                <div class="memory-card archive-folder" data-id="2">
+                    <span class="card-number">2</span>
+                    <div class="card-inner">
+                        <h3>Hostel memories</h3>
+                        <div class="icon-stamp"><i class="fa-solid fa-bed"></i></div>
+                    </div>
+                </div>
+                <div class="memory-card archive-folder" data-id="3">
+                    <span class="card-number">3</span>
+                    <div class="card-inner">
+                        <h3>You all!!</h3>
+                        <div class="icon-stamp"><i class="fa-solid fa-user-group"></i></div>
+                    </div>
+                </div>
+                <div class="memory-card archive-folder" data-id="4">
+                    <span class="card-number">4</span>
+                    <div class="card-inner">
+                        <h3>college memories</h3>
+                        <div class="icon-stamp"><i class="fa-solid fa-graduation-cap"></i></div>
+                    </div>
+                </div>
+                <div class="memory-card archive-folder" data-id="5">
+                    <span class="card-number">5</span>
+                    <div class="card-inner">
+                        <h3>Hosteller Gems</h3>
+                        <div class="icon-stamp"><i class="fa-solid fa-gem"></i></div>
+                    </div>
+                </div>
+                <div class="memory-card archive-folder" data-id="6">
+                    <span class="card-number">6</span>
+                    <div class="card-inner">
+                        <h3>The Gang Plus</h3>
+                        <div class="icon-stamp"><i class="fa-solid fa-camera-retro"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal for Memory Windows with Images Bundle -->
+    <div id="memory-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <div class="modal-header">
+                <h2 id="modal-title">Memory Title</h2>
+            </div>
+            <div class="modal-body">
+
+                <!-- Inner Modal Carousel for 'Bundle of Images' -->
+                <div id="modal-image-carousel" class="image-wrapper carousel-wrapper">
+                    <button id="carousel-prev" class="carousel-nav"><i class="fa-solid fa-chevron-left"></i></button>
+
+                    <div class="carousel-container">
+                        <div class="carousel-track" id="carousel-track">
+                            <!-- Filled dynamically by JS -->
+                        </div>
+                    </div>
+
+                    <button id="carousel-next" class="carousel-nav"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+
+                <p id="modal-caption" class="caption"></p>
+                <p id="modal-description" class="description"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Memory Lane Video Section -->
+    <section id="memory-video" class="section-video">
+        <h2 class="section-title">Memory Lane</h2>
+        <div class="video-container">
+            <!-- Increased height wrapper for video -->
+            <video class="retro-video" controls
+                poster="https://via.placeholder.com/800x450/222222/cccccc?text=Video+Placeholder">
+                <source src="IMG_2667.MOV" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <p class="video-caption">A small tribute from us :)</p>
+        </div>
+    </section>
+
+    <!-- 5. Glow-Up Timeline Section -->
+    <section id="timeline" class="section-timeline">
+        <h2 class="section-title">The Journey: 2022-2026</h2>
+        <div class="timeline-container">
+            <div class="timeline-line"></div>
+            <div class="timeline-node left">
+                <div class="node-content">
+                    <span class="node-time">2022 — The Beginning</span>
+                    <h3>The First Step</h3>
+                    <p>A new campus, new faces, new rooms, and the start of a journey no one fully understood yet.</p>
+                </div>
+            </div>
+            <div class="timeline-node right">
+                <div class="node-content">
+                    <span class="node-time">2022 — First Days in Hostel</span>
+                    <h3>Settling Into the Chaos</h3>
+                    <p>From adjusting to hostel life to figuring out routines, this was where strangers slowly became
+                        familiar faces.</p>
+                </div>
+            </div>
+            <div class="timeline-node left">
+                <div class="node-content">
+                    <span class="node-time">2022–2023 — First College Memories</span>
+                    <h3>The Start of It All</h3>
+                    <p>The first events, first group photos, first attendance struggles, and the first real taste of
+                        college life.</p>
+                </div>
+            </div>
+            <div class="timeline-node right">
+                <div class="node-content">
+                    <span class="node-time">2023 — Getting Used to It</span>
+                    <h3>Not New Anymore</h3>
+                    <p>Classes, assignments, hostel life, friendships, and everyday chaos slowly became normal.</p>
+                </div>
+            </div>
+            <div class="timeline-node left">
+                <div class="node-content">
+                    <span class="node-time">2023–2024 — The Golden Middle</span>
+                    <h3>Core Memory Phase</h3>
+                    <p>This was the phase of unforgettable hostel moments, late-night talks, celebrations, stress,
+                        laughter, and memories that stayed.</p>
+                </div>
+            </div>
+            <div class="timeline-node right">
+                <div class="node-content">
+                    <span class="node-time">2024 — Reality Hits</span>
+                    <h3>The Pressure Builds</h3>
+                    <p>Exams, responsibilities, and thoughts about the future started feeling more real, but so did the
+                        bond with the memories being made.</p>
+                </div>
+            </div>
+            <div class="timeline-node left">
+                <div class="node-content">
+                    <span class="node-time">2024–2025 — The Lasts Begin</span>
+                    <h3>Moments We Didn’t Know Were Last</h3>
+                    <p>The last fests, the last spontaneous nights, the last ordinary days that would later become the
+                        most memorable.</p>
+                </div>
+            </div>
+            <div class="timeline-node right">
+                <div class="node-content">
+                    <span class="node-time">2025 — Final Year</span>
+                    <h3>The Final Lap</h3>
+                    <p>What once felt far away was suddenly here — the final year, with all its pressure, nostalgia, and
+                        change.</p>
+                </div>
+            </div>
+            <div class="timeline-node left">
+                <div class="node-content">
+                    <span class="node-time">2025–2026 — Farewell Season</span>
+                    <h3>Almost Time</h3>
+                    <p>Between deadlines, goodbyes, and final celebrations, the end of one chapter slowly came into
+                        view.</p>
+                </div>
+            </div>
+            <div class="timeline-node right">
+                <div class="node-content">
+                    <span class="node-time">2026 — Farewell Day</span>
+                    <h3>Sayonara Seniors</h3>
+                    <p>Not just the end of four years, but the beginning of new journeys, new encounters, and a whole
+                        life ahead.</p>
+                </div>
+            </div>
+            <div class="timeline-node left">
+                <div class="node-content">
+                    <span class="node-time">2026 — Passing Out</span>
+                    <h3>Beyond These Walls</h3>
+                    <p>They leave with more than a degree — with stories, laughter, chaos, growth, and memories that
+                        time won’t take away.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- 5. Private Messaging (Envelopes) -->
+    <section class="section-messages" id="section-messages">
+        <h2 class="section-title">Private Letters</h2>
+        <p class="section-subtitle">A digital postbox for your eyes only.</p>
+
+        <div class="envelopes-wrapper">
+            <!-- Preshmi -->
+            <div class="envelope-item" data-person="preshmi">
+                <div class="notif-badge" id="badge-preshmi">0</div>
+                <div class="envelope">
+                    <div class="envelope-flap"></div>
+                    <div class="flap-shadow"></div>
+                    <div class="envelope-body"></div>
+                    <div class="envelope-label">Preshmi</div>
+                </div>
+            </div>
+            <!-- Josna -->
+            <div class="envelope-item" data-person="josna">
+                <div class="notif-badge" id="badge-josna">0</div>
+                <div class="envelope">
+                    <div class="envelope-flap"></div>
+                    <div class="flap-shadow"></div>
+                    <div class="envelope-body"></div>
+                    <div class="envelope-label">Josna</div>
+                </div>
+            </div>
+            <!-- Alpha -->
+            <div class="envelope-item" data-person="alpha">
+                <div class="notif-badge" id="badge-alpha">0</div>
+                <div class="envelope">
+                    <div class="envelope-flap"></div>
+                    <div class="flap-shadow"></div>
+                    <div class="envelope-body"></div>
+                    <div class="envelope-label">Alpha</div>
+                </div>
+            </div>
+            <!-- Abitha -->
+            <div class="envelope-item" data-person="abitha">
+                <div class="notif-badge" id="badge-abitha">0</div>
+                <div class="envelope">
+                    <div class="envelope-flap"></div>
+                    <div class="flap-shadow"></div>
+                    <div class="envelope-body"></div>
+                    <div class="envelope-label">Abitha</div>
+                </div>
+            </div>
+            <!-- Arpitha -->
+            <div class="envelope-item" data-person="arpitha">
+                <div class="notif-badge" id="badge-arpitha">0</div>
+                <div class="envelope">
+                    <div class="envelope-flap"></div>
+                    <div class="flap-shadow"></div>
+                    <div class="envelope-body"></div>
+                    <div class="envelope-label">Arpitha</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Messaging Modal (Password / Inbox) -->
+    <div id="msg-modal">
+        <div class="modal-content">
+            <span class="close-btn" id="close-msg-modal">&times;</span>
+
+            <!-- Password View -->
+            <div id="password-view" class="password-inner">
+                <h2 id="msg-modal-title">Unlock Messages</h2>
+                <p>Enter your secret password to view your letters.</p>
+                <div class="password-input-container">
+                    <input type="password" id="password-input" placeholder="Enter Password">
+                    <button type="button" id="toggle-password" class="eye-btn"><i class="fas fa-eye"></i></button>
+                </div>
+                <button class="vintage-btn-outline" id="unlock-btn">Unlock</button>
+                <p id="password-error" style="color: #e74c3c; margin-top: 1rem; display: none;">Incorrect password. Try
+                    again!</p>
+            </div>
+
+            <!-- Inbox View -->
+            <div id="inbox-view" style="display: none;">
+                <h2 id="inbox-title">Your Inbox</h2>
+                <div class="message-list" id="message-list">
+                    <!-- Messages will be injected here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. Juniors Letter -->
+    <section id="final-letter" class="section-final">
+        <div class="final-content transition-wrapper">
+            <h2 class="vintage-ending">End of an Era</h2>
+
+            <div class="juniors-letter">
+                <p>Dear Seniors,</p>
+                <p>From the chaotic mess hall fights to the late-night exam cramming, you've shown us how to survive and
+                    thrive. The hostel won't be the same without your noise, your advice, and your presence. Thank you
+                    for the memories.</p>
+                <p>Farewell, and good luck in the real world.</p>
+                <div class="signature">
+                    <span class="sign-off">- With love,</span><br>
+                    <span class="signed-names">The Juniors</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. Popper Finale Section -->
+    <section id="popper-finale" class="section-popper">
+        <div class="finale-content">
+            <h2 class="vintage-ending pop-text" id="popper-title">It is not a end...</h2>
+
+            <p class="finale-paragraph" id="popper-desc">Not just an ending, but the beginning of new paths, new faces,
+                and countless moments yet to come — with a lifetime to look back on these memories.</p>
+            <p class="finale-reminder" id="popper-reminder">Just a reminder…</p>
+
+            <button id="press-this-btn" class="vintage-btn-outline">Press This!</button>
+
+            <!-- Revealed dramatically by JS after clicking -->
+            <div id="goodbye-container" class="hidden-burst">
+                <div class="goodbye-polaroid">
+                    <div class="goodbye-img-placeholder" style="background: transparent; padding: 0;">
+                        <img src="img3.jpeg" alt="Goodbye"
+                            style="width: 100%; height: 100%; object-fit: cover; box-shadow: inset 0 0 10px rgba(0,0,0,0.2);">
+                    </div>
+                    <div class="goodbye-text">Goodbye</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sparkle Canvas overlay for bright beautiful colors -->
+        <div id="sparkle-overlay"></div>
+        <footer>
+            <p>2022-26 &copy; Hostel Archives</p>
+        </footer>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

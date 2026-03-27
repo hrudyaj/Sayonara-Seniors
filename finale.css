@@ -1,0 +1,240 @@
+/* --- 7. Dedicated Popper Finale Section --- */
+.section-popper {
+    background: var(--bg-color);
+    padding-bottom: 0px;
+    min-height: 100vh;
+    transition: background 1.5s ease-in-out, box-shadow 1.5s ease-in-out;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Popper Active Class */
+.section-popper.color-burst {
+    background: radial-gradient(circle at center, #0B192C 0%, #030811 100%);
+    /* starry midnight blue night effect */
+    color: #fff;
+    box-shadow: inset 0 0 100px rgba(11, 25, 44, 0.6);
+}
+
+.vintage-ending {
+    font-size: 4rem;
+    color: var(--color-red);
+    margin-bottom: 2rem;
+    border-bottom: 2px solid var(--color-red);
+    padding-bottom: 0.5rem;
+    transition: color 1s, border-color 1s;
+    font-family: 'Playfair Display', serif;
+}
+
+.section-popper.color-burst .vintage-ending {
+    color: #ffe066;
+    /* Vibrant sparkly gold/yellow text */
+    border-bottom-color: transparent;
+    text-shadow: 0px 0px 20px rgba(255, 224, 102, 0.6);
+}
+
+/* Texts inside finale before pop */
+.finale-paragraph {
+    font-size: 1.4rem;
+    font-family: var(--font-heading);
+    color: var(--text-primary);
+    max-width: 600px;
+    margin: 0 auto;
+    margin-bottom: 2rem;
+    line-height: 1.8;
+    font-style: italic;
+    transition: opacity 0.5s;
+}
+
+.finale-reminder {
+    font-size: 1.1rem;
+    font-family: var(--font-body);
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: bold;
+    transition: opacity 0.5s;
+}
+
+.finale-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 4rem 1rem;
+    max-width: 800px;
+    position: relative;
+    z-index: 10;
+}
+
+.vintage-btn-outline {
+    padding: 1rem 2.5rem;
+    font-size: 1.2rem;
+    font-family: var(--font-body);
+    background: transparent;
+    border: 2px solid var(--text-primary);
+    color: var(--text-primary);
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: all 0.2s;
+    margin-top: 1rem;
+}
+
+.vintage-btn-outline:hover {
+    background: var(--text-primary);
+    color: var(--bg-color);
+}
+
+
+/* Floating Goodbye Polaroid Pop Up Structure */
+.hidden-burst {
+    display: none;
+    opacity: 0;
+}
+
+.show-goodbye {
+    display: flex;
+    justify-content: center;
+    margin-top: -2rem;
+    opacity: 0;
+    animation: fadeInPop 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    position: relative;
+    z-index: 20;
+}
+
+.goodbye-polaroid {
+    width: 280px;
+    height: 320px;
+    background: #e9e3d4;
+    padding: 15px;
+    padding-bottom: 60px;
+    margin-top: 15px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    position: relative;
+    transform: rotate(-3deg);
+    animation: floatGoodbye 4s ease-in-out infinite alternate;
+}
+
+.goodbye-img-placeholder {
+    width: 100%;
+    height: 100%;
+    background: #f4f4f2;
+    /* Warm neutral placeholder */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.placeholder-text {
+    color: var(--color-sepia);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-style: italic;
+}
+
+.goodbye-text {
+    position: absolute;
+    bottom: 8px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-family: 'Dancing Script', cursive;
+    font-size: 3rem;
+    color: rgb(10, 10, 70);
+    /* Classy deep red cursive */
+}
+
+@keyframes floatGoodbye {
+    0% {
+        transform: translateY(0px) rotate(-3deg);
+    }
+
+    100% {
+        transform: translateY(-15px) rotate(2deg);
+    }
+}
+
+@keyframes fadeInPop {
+    from {
+        opacity: 0;
+        transform: scale(0.6) translateY(50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+
+/* Sparkle overlay generated dynamically */
+#sparkle-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 5;
+    opacity: 0;
+    transition: opacity 2s ease;
+}
+
+.section-popper.color-burst #sparkle-overlay {
+    opacity: 1;
+    /* Reveals the sparkly stars injected by JS */
+}
+
+/* Individual CSS Sparkles injected via JS */
+.sparkle-star {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 8px 2px rgba(255, 255, 255, 0.8),
+        0 0 15px 4px rgba(255, 224, 102, 0.6);
+    animation: twinkle linear infinite;
+}
+
+@keyframes twinkle {
+
+    0%,
+    100% {
+        opacity: 0.3;
+        transform: scale(0.8);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.5);
+    }
+}
+
+footer {
+    width: 100%;
+    text-align: center;
+    padding: 2rem;
+    border-top: 1px dashed var(--text-secondary);
+    position: relative;
+    z-index: 10;
+}
+
+footer p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-family: var(--font-body);
+}
+
+.section-popper.color-burst footer {
+    border-top-color: rgba(255, 255, 255, 0.2);
+}
+
+.section-popper.color-burst footer p {
+    color: rgba(255, 255, 255, 0.6);
+}

@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send a Message | Retro Farewell</title>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime&family=Dancing+Script:wght@700&family=Playfair+Display:wght@700&family=Outfit:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --color-gold: #c5a059;
+            --color-burgundy: #6b2d2d;
+            --bg-color: #fdf8e1;
+            --text-primary: #2c2c2c;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: radial-gradient(circle, #fdf8e1 0%, #e0d1b3 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            color: var(--text-primary);
+        }
+
+        .send-container {
+            background: #fff;
+            max-width: 550px;
+            width: 100%;
+            padding: 3rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            border: 1px solid #d5c4a1;
+            position: relative;
+        }
+
+        .send-container::before {
+            content: '';
+            position: absolute;
+            top: 10px; left: 10px; right: 10px; bottom: 10px;
+            border: 1px dashed var(--color-gold);
+            pointer-events: none;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--color-burgundy);
+            text-align: center;
+        }
+
+        p.subtitle {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-style: italic;
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        select, textarea, input[type="text"] {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid #d5c4a1;
+            background: #fdfaf0;
+            font-family: inherit;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        select:focus, textarea:focus, input[type="text"]:focus {
+            border-color: var(--color-gold);
+        }
+
+        textarea {
+            height: 130px;
+            resize: none;
+            font-family: 'Courier Prime', monospace;
+        }
+
+        /* Media type selector */
+        .type-tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 1.5rem;
+            border: 1px solid #d5c4a1;
+            border-radius: 0;
+            overflow: hidden;
+        }
+        .type-tab {
+            flex: 1;
+            padding: 0.8rem;
+            text-align: center;
+            cursor: pointer;
+            background: #fdfaf0;
+            border-right: 1px solid #d5c4a1;
+            font-size: 0.85rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.2s;
+        }
+        .type-tab:last-child { border-right: none; }
+        .type-tab:hover { background: #f0e6cc; }
+        .type-tab.active {
+            background: var(--color-burgundy);
+            color: white;
+        }
+        .type-tab i { margin-right: 5px; }
+
+        /* File upload area */
+        .file-upload-area {
+            display: none;
+            border: 2px dashed var(--color-gold);
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            background: #fdfaf0;
+            transition: all 0.3s;
+            margin-bottom: 1rem;
+        }
+        .file-upload-area:hover, .file-upload-area.dragover {
+            background: #f0e6cc;
+            border-color: var(--color-burgundy);
+        }
+        .file-upload-area i {
+            font-size: 2rem;
+            color: var(--color-gold);
+            margin-bottom: 0.5rem;
+        }
+        .file-upload-area p {
+            font-size: 0.9rem;
+            color: #888;
+        }
+        .file-upload-area input[type="file"] {
+            display: none;
+        }
+
+        /* Preview */
+        .media-preview {
+            display: none;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: #fdfaf0;
+            border: 1px solid #d5c4a1;
+            text-align: center;
+            position: relative;
+        }
+        .media-preview img, .media-preview video {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 4px;
+        }
+        .media-preview audio { width: 100%; }
+        .remove-media {
+            position: absolute;
+            top: 5px; right: 5px;
+            background: var(--color-burgundy);
+            color: white;
+            border: none;
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .file-name {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 0.5rem;
+        }
+
+        .send-btn {
+            width: 100%;
+            padding: 1.2rem;
+            background: var(--color-burgundy);
+            color: white;
+            border: none;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Playfair Display', serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .send-btn:hover {
+            background: #4e2121;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(107, 45, 45, 0.2);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .success-msg {
+            display: none;
+            text-align: center;
+            background: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            margin-top: 1.5rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .error-msg {
+            display: none;
+            text-align: center;
+            background: #f8d7da;
+            color: #721c24;
+            padding: 1rem;
+            margin-top: 1.5rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .footer-note {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .size-warning {
+            font-size: 0.75rem;
+            color: #999;
+            margin-top: 0.3rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="send-container">
+        <h1>Retro Mailbox</h1>
+        <p class="subtitle">Send a note, a voice clip, or a video to your seniors.</p>
+
+        <div class="form-group">
+            <label for="recipient">To:</label>
+            <select id="recipient">
+                <option value="" disabled selected>Select a person...</option>
+                <option value="preshmi">Preshmi</option>
+                <option value="josna">Josna</option>
+                <option value="alpha">Alpha</option>
+                <option value="abitha">Abitha</option>
+                <option value="arpitha">Arpitha</option>
+            </select>
+        </div>
+
+        <!-- Message Type Tabs -->
+        <div class="type-tabs">
+            <div class="type-tab active" data-type="text"><i class="fa-solid fa-pen"></i> Text</div>
+            <div class="type-tab" data-type="image"><i class="fa-solid fa-image"></i> Image</div>
+            <div class="type-tab" data-type="audio"><i class="fa-solid fa-microphone"></i> Audio</div>
+            <div class="type-tab" data-type="video"><i class="fa-solid fa-video"></i> Video</div>
+        </div>
+
+        <!-- Text Area (default) -->
+        <div class="form-group" id="text-group">
+            <textarea id="message" placeholder="Type your message here..."></textarea>
+        </div>
+
+        <!-- File Upload Area (for image/audio/video) -->
+        <div class="file-upload-area" id="file-upload-area">
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+            <p id="upload-label">Click or drag a file here</p>
+            <p class="size-warning">Max ~3 MB for local storage</p>
+            <input type="file" id="file-input">
+        </div>
+
+        <!-- Media Preview -->
+        <div class="media-preview" id="media-preview">
+            <button class="remove-media" id="remove-media">&times;</button>
+            <div id="preview-content"></div>
+            <div class="file-name" id="file-name-display"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="sender">From (Regards):</label>
+            <input type="text" id="sender" placeholder="Your Name">
+        </div>
+
+        <button class="send-btn" id="send-btn">Send Secret Note</button>
+
+        <div class="success-msg" id="success-msg">
+            Message sent successfully to the archives!
+        </div>
+        <div class="error-msg" id="error-msg"></div>
+
+        <div class="footer-note">
+            &copy; 2022-26 Hostel Farewell | Local Archives
+        </div>
+    </div>
+
+    <script>
+        const sendBtn = document.getElementById('send-btn');
+        const successMsg = document.getElementById('success-msg');
+        const errorMsg = document.getElementById('error-msg');
+        const tabs = document.querySelectorAll('.type-tab');
+        const textGroup = document.getElementById('text-group');
+        const fileUploadArea = document.getElementById('file-upload-area');
+        const fileInput = document.getElementById('file-input');
+        const mediaPreview = document.getElementById('media-preview');
+        const previewContent = document.getElementById('preview-content');
+        const removeMediaBtn = document.getElementById('remove-media');
+        const uploadLabel = document.getElementById('upload-label');
+        const fileNameDisplay = document.getElementById('file-name-display');
+
+        let currentType = 'text';
+        let attachedFileData = null; // base64 data URL
+        let attachedFileName = null;
+
+        // Tab switching
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                currentType = tab.dataset.type;
+
+                if (currentType === 'text') {
+                    textGroup.style.display = 'block';
+                    fileUploadArea.style.display = 'none';
+                } else {
+                    textGroup.style.display = 'none';
+                    fileUploadArea.style.display = 'block';
+                    // Set accepted file types
+                    if (currentType === 'image') {
+                        fileInput.accept = 'image/*';
+                        uploadLabel.textContent = 'Click or drag an image here';
+                    } else if (currentType === 'audio') {
+                        fileInput.accept = 'audio/*';
+                        uploadLabel.textContent = 'Click or drag an audio file here';
+                    } else if (currentType === 'video') {
+                        fileInput.accept = 'video/*';
+                        uploadLabel.textContent = 'Click or drag a video file here';
+                    }
+                }
+                // Clear previous attachment
+                clearAttachment();
+            });
+        });
+
+        // File upload click
+        fileUploadArea.addEventListener('click', () => fileInput.click());
+
+        // Drag & drop
+        fileUploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            fileUploadArea.classList.add('dragover');
+        });
+        fileUploadArea.addEventListener('dragleave', () => {
+            fileUploadArea.classList.remove('dragover');
+        });
+        fileUploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            fileUploadArea.classList.remove('dragover');
+            if (e.dataTransfer.files.length > 0) {
+                handleFile(e.dataTransfer.files[0]);
+            }
+        });
+
+        // File input change
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length > 0) {
+                handleFile(fileInput.files[0]);
+            }
+        });
+
+        function handleFile(file) {
+            // Check size (~3MB limit for localStorage)
+            if (file.size > 3 * 1024 * 1024) {
+                errorMsg.textContent = 'File too large! Please keep files under 3 MB.';
+                errorMsg.style.display = 'block';
+                setTimeout(() => errorMsg.style.display = 'none', 4000);
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                attachedFileData = e.target.result;
+                attachedFileName = file.name;
+                showPreview(file);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function showPreview(file) {
+            previewContent.innerHTML = '';
+            fileNameDisplay.textContent = file.name;
+            mediaPreview.style.display = 'block';
+            fileUploadArea.style.display = 'none';
+
+            if (currentType === 'image') {
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                previewContent.appendChild(img);
+            } else if (currentType === 'audio') {
+                const audio = document.createElement('audio');
+                audio.src = URL.createObjectURL(file);
+                audio.controls = true;
+                previewContent.appendChild(audio);
+            } else if (currentType === 'video') {
+                const video = document.createElement('video');
+                video.src = URL.createObjectURL(file);
+                video.controls = true;
+                video.style.maxHeight = '200px';
+                previewContent.appendChild(video);
+            }
+        }
+
+        function clearAttachment() {
+            attachedFileData = null;
+            attachedFileName = null;
+            previewContent.innerHTML = '';
+            fileNameDisplay.textContent = '';
+            mediaPreview.style.display = 'none';
+            fileInput.value = '';
+            if (currentType !== 'text') {
+                fileUploadArea.style.display = 'block';
+            }
+        }
+
+        removeMediaBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            clearAttachment();
+        });
+
+        // Send
+        sendBtn.addEventListener('click', () => {
+            const recipient = document.getElementById('recipient').value;
+            const text = document.getElementById('message').value.trim();
+            const from = document.getElementById('sender').value.trim() || 'Anonymous';
+
+            if (!recipient) {
+                alert('Please select a recipient!');
+                return;
+            }
+
+            // Validate: text mode needs text, media mode needs attachment
+            if (currentType === 'text' && !text) {
+                alert('Please type a message!');
+                return;
+            }
+            if (currentType !== 'text' && !attachedFileData) {
+                alert('Please attach a file!');
+                return;
+            }
+
+            // Disable button while saving
+            sendBtn.disabled = true;
+            sendBtn.textContent = 'Sending...';
+
+            const newMsg = {
+                id: Date.now(),
+                type: currentType,
+                text: currentType === 'text' ? text : '',
+                mediaData: currentType !== 'text' ? attachedFileData : null,
+                mediaName: currentType !== 'text' ? attachedFileName : null,
+                from: from,
+                timestamp: new Date().toISOString()
+            };
+
+            try {
+                let allMessages = JSON.parse(localStorage.getItem('farewell_messages')) || {};
+                if (!allMessages[recipient]) allMessages[recipient] = [];
+                allMessages[recipient].push(newMsg);
+
+                let unreadCounts = JSON.parse(localStorage.getItem('unread_counts')) || {};
+                unreadCounts[recipient] = (unreadCounts[recipient] || 0) + 1;
+
+                localStorage.setItem('farewell_messages', JSON.stringify(allMessages));
+                localStorage.setItem('unread_counts', JSON.stringify(unreadCounts));
+
+                // Success
+                successMsg.style.display = 'block';
+                document.getElementById('message').value = '';
+                document.getElementById('sender').value = '';
+                clearAttachment();
+
+                setTimeout(() => successMsg.style.display = 'none', 3000);
+            } catch (e) {
+                // localStorage quota exceeded
+                errorMsg.textContent = 'Storage full! Try sending a smaller file or clear old messages.';
+                errorMsg.style.display = 'block';
+                setTimeout(() => errorMsg.style.display = 'none', 5000);
+            }
+
+            sendBtn.disabled = false;
+            sendBtn.textContent = 'Send Secret Note';
+        });
+    </script>
+</body>
+</html>

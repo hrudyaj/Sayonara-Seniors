@@ -1,0 +1,77 @@
+:root {
+    /* Retro Sepia / Vintage Palette */
+    --bg-color: #f4ebd0;
+    /* Vintage paper base */
+    --bg-dark: #d5c4a1;
+    --text-primary: #3c3428;
+    --text-secondary: #5c503e;
+
+    /* Muted retro colors */
+    --color-sepia: #8b5a2b;
+    --color-red: #8b3a3a;
+    --color-blue: #4a6fa5;
+    --color-green: #556b2f;
+    --color-gold: #b38b22;
+
+    --font-heading: 'Playfair Display', serif;
+    --font-body: 'Courier Prime', monospace;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+/* Film Grain global overlay */
+.film-grain {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.15;
+    background: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+}
+
+/* Typography styles */
+h1,
+h2,
+h3 {
+    font-family: var(--font-heading);
+}
+
+.section-title {
+    font-size: 3rem;
+    text-align: center;
+    margin-bottom: 3rem;
+    color: var(--color-sepia);
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    border-bottom: 2px solid var(--color-sepia);
+    padding-bottom: 0.5rem;
+    display: inline-block;
+}
+
+/* Sections Base */
+section {
+    min-height: 100vh;
+    padding: 5rem 2rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px dashed var(--text-secondary);
+}
+

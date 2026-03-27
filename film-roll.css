@@ -1,0 +1,86 @@
+/* --- 2. Retro Film Roll Section --- */
+.section-film {
+    background: #1a1a1a;
+    color: #e0e0e0;
+    overflow: hidden;
+    padding: 0;
+    min-height: 50vh;
+}
+
+.section-film .section-title {
+    color: #fff;
+    border-bottom-color: #fff;
+    margin-top: 5rem;
+}
+
+.film-strip-wrapper {
+    width: 100%;
+    overflow: hidden;
+    background: #000;
+    border-top: 20px solid #222;
+    border-bottom: 20px solid #222;
+    position: relative;
+    padding: 10px 0;
+    margin-top: 2rem;
+    margin-bottom: 5rem;
+}
+
+.film-strip-wrapper::before,
+.film-strip-wrapper::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 20px;
+    background-image: radial-gradient(#fff 30%, transparent 35%);
+    background-size: 30px 20px;
+    background-position: 0 0;
+    background-repeat: repeat-x;
+    z-index: 5;
+}
+
+.film-strip-wrapper::before {
+    top: -20px;
+}
+
+.film-strip-wrapper::after {
+    bottom: -20px;
+}
+
+.film-strip-track {
+    display: flex;
+    width: calc(300px * 148);
+    animation: scrollFilm 185s linear infinite;
+}
+
+.film-frame {
+    width: 300px;
+    height: 200px;
+    padding: 5px 15px;
+    flex-shrink: 0;
+}
+
+.frame-content {
+    width: 100%;
+    height: 100%;
+    background-color: #333;
+    border: 1px solid #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    font-size: 1.2rem;
+    font-family: var(--font-body);
+    box-shadow: inset 0 0 20px #000;
+}
+
+@keyframes scrollFilm {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(calc(-300px * 74));
+    }
+}
+
