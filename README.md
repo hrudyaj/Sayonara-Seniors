@@ -33,8 +33,6 @@ Since this is a client-side static web application, there is no convoluted build
    - *Note: The Memory Lane video is externally hosted on Google Drive for performance and storage efficiency.*
 3. Open `index.html` in any modern web browser (Google Chrome, Firefox, Safari).
 
-*Note: For the best experience, host this project using a local server extension (like VS Code's "Live Server") or a static host interface (like GitHub Pages/Netlify) to prevent local file path blocking by standard browser strict CORS policies.*
-
 ## Project Structure
 
 The codebase is split into modular components for easier scalability and management:
