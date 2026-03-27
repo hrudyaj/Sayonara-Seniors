@@ -298,22 +298,57 @@ if (pressThisBtn && popperSection) {
         return;
     }
 
-    function updateBadges() {
-        var unread = JSON.parse(localStorage.getItem('unread_counts')) || {};
-        var people = Object.keys(passwords);
-        for (var i = 0; i < people.length; i++) {
-            var person = people[i];
-            var badge = document.getElementById('badge-' + person);
-            if (badge) {
-                var count = unread[person] || 0;
-                badge.innerText = count;
-                if (count > 0) {
-                    badge.classList.add('active');
-                } else {
-                    badge.classList.remove('active');
-                }
+    // Migration logic for one-time move of local data to Firebase
+    function migrateLocalStorageToFirebase() {
+        const localMsgs = localStorage.getItem('farewell_messages');
+        const localUnread = localStorage.getItem('unread_counts');
+
+        if (localMsgs) {
+            try {
+                const msgs = JSON.parse(localMsgs);
+                Object.keys(msgs).forEach(recipient => {
+                    msgs[recipient].forEach(msg => {
+                        database.ref('farewell_messages/' + recipient).push(msg);
+                    });
+                });
+                localStorage.removeItem('farewell_messages');
+                console.log("Messages migrated to Firebase.");
+            } catch (e) {
+                console.error("Migration error:", e);
             }
         }
+
+        if (localUnread) {
+            try {
+                const unread = JSON.parse(localUnread);
+                Object.keys(unread).forEach(recipient => {
+                    database.ref('unread_counts/' + recipient).set(unread[recipient]);
+                });
+                localStorage.removeItem('unread_counts');
+            } catch (e) { }
+        }
+    }
+
+    migrateLocalStorageToFirebase();
+
+    function updateBadges() {
+        database.ref('unread_counts').on('value', (snapshot) => {
+            const unread = snapshot.val() || {};
+            const people = Object.keys(passwords);
+            for (let i = 0; i < people.length; i++) {
+                const person = people[i];
+                const badge = document.getElementById('badge-' + person);
+                if (badge) {
+                    const count = unread[person] || 0;
+                    badge.innerText = count;
+                    if (count > 0) {
+                        badge.classList.add('active');
+                    } else {
+                        badge.classList.remove('active');
+                    }
+                }
+            }
+        });
     }
 
     // Open envelope
@@ -338,10 +373,8 @@ if (pressThisBtn && popperSection) {
         var entered = passwordInput.value.trim();
         if (entered === passwords[currentRecipient]) {
             showInbox();
-            var unread = JSON.parse(localStorage.getItem('unread_counts')) || {};
-            unread[currentRecipient] = 0;
-            localStorage.setItem('unread_counts', JSON.stringify(unread));
-            updateBadges();
+            // Clear unread count in Firebase for this recipient
+            database.ref('unread_counts/' + currentRecipient).set(0);
         } else {
             passwordError.style.display = 'block';
         }
@@ -365,47 +398,50 @@ if (pressThisBtn && popperSection) {
     function showInbox() {
         passwordView.style.display = 'none';
         inboxView.style.display = 'block';
-        var name = currentRecipient.charAt(0).toUpperCase() + currentRecipient.slice(1);
+        const name = currentRecipient.charAt(0).toUpperCase() + currentRecipient.slice(1);
         document.getElementById('inbox-title').innerText = name + "'s Inbox";
 
-        var allMessages = JSON.parse(localStorage.getItem('farewell_messages')) || {};
-        var myMessages = allMessages[currentRecipient] || [];
+        messageList.innerHTML = '<div class="no-messages">Loading letters...</div>';
 
-        messageList.innerHTML = '';
-        if (myMessages.length === 0) {
-            messageList.innerHTML = '<div class="no-messages">No letters in your postbox yet.</div>';
-            return;
-        }
+        // Listen for messages for this specific recipient in real-time
+        database.ref('farewell_messages/' + currentRecipient).on('value', (snapshot) => {
+            const data = snapshot.val();
+            const myMessages = data ? Object.values(data) : [];
 
-        var reversed = myMessages.slice().reverse();
-        for (var i = 0; i < reversed.length; i++) {
-            (function (msg) {
-                var card = document.createElement('div');
+            messageList.innerHTML = '';
+            if (myMessages.length === 0) {
+                messageList.innerHTML = '<div class="no-messages">No letters in your postbox yet.</div>';
+                return;
+            }
+
+            const reversed = myMessages.slice().reverse();
+            reversed.forEach((msg) => {
+                const card = document.createElement('div');
                 card.className = 'message-card';
                 card.style.cursor = 'pointer';
-                var html = '';
-                var msgType = msg.type || 'text';
+                let html = '';
+                const msgType = msg.type || 'text';
 
                 if (msgType === 'image' && msg.mediaData) {
-                    html += '<div class="msg-media"><img src="' + msg.mediaData + '" style="max-width:100%;max-height:100px;border-radius:4px;object-fit:cover;"></div>';
+                    html += `<div class="msg-media"><img src="${msg.mediaData}" style="max-width:100%;max-height:100px;border-radius:4px;object-fit:cover;"></div>`;
                 } else if (msgType === 'audio' && msg.mediaData) {
-                    html += '<div class="msg-media" style="pointer-events:none;"><audio style="width:100%;height:30px;"><source src="' + msg.mediaData + '"></audio></div>';
+                    html += `<div class="msg-media" style="pointer-events:none;"><audio style="width:100%;height:30px;"><source src="${msg.mediaData}"></audio></div>`;
                 } else if (msgType === 'video' && msg.mediaData) {
-                    html += '<div class="msg-media"><video style="max-width:100%;max-height:80px;border-radius:4px;pointer-events:none;"><source src="' + msg.mediaData + '"></video></div>';
+                    html += `<div class="msg-media"><video style="max-width:100%;max-height:80px;border-radius:4px;pointer-events:none;"><source src="${msg.mediaData}"></video></div>`;
                 }
                 if (msg.text) {
-                    var preview = msg.text.length > 80 ? msg.text.substring(0, 80) + '...' : msg.text;
-                    html += '<div class="msg-text">' + preview + '</div>';
+                    const preview = msg.text.length > 80 ? msg.text.substring(0, 80) + '...' : msg.text;
+                    html += `<div class="msg-text">${preview}</div>`;
                 }
-                html += '<div class="msg-footer"><div class="msg-sender">- ' + msg.from + '</div></div>';
+                html += `<div class="msg-footer"><div class="msg-sender">- ${msg.from}</div></div>`;
                 card.innerHTML = html;
 
-                card.addEventListener('click', function () {
+                card.addEventListener('click', () => {
                     showFullMessage(msg);
                 });
                 messageList.appendChild(card);
-            })(reversed[i]);
-        }
+            });
+        });
     }
 
     function showFullMessage(msg) {
@@ -443,17 +479,17 @@ if (pressThisBtn && popperSection) {
     // Close
     closeMsgBtn.addEventListener('click', function () {
         msgModal.classList.remove('show');
+        // Stop listening to messages when modal closes to save resources
+        if (currentRecipient) {
+            database.ref('farewell_messages/' + currentRecipient).off();
+        }
     });
     msgModal.addEventListener('click', function (e) {
         if (e.target === msgModal) {
             msgModal.classList.remove('show');
-        }
-    });
-
-    // Real-time sync
-    window.addEventListener('storage', function (e) {
-        if (e.key === 'unread_counts' || e.key === 'farewell_messages') {
-            updateBadges();
+            if (currentRecipient) {
+                database.ref('farewell_messages/' + currentRecipient).off();
+            }
         }
     });
 

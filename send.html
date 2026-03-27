@@ -310,6 +310,11 @@
             &copy; 2022-26 Hostel Farewell | Local Archives
         </div>
     </div>
+    
+    <!-- Firebase SDK (Compat Version) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="firebase-config.js"></script>
 
     <script>
         const sendBtn = document.getElementById('send-btn');
@@ -479,33 +484,32 @@
                 timestamp: new Date().toISOString()
             };
 
-            try {
-                let allMessages = JSON.parse(localStorage.getItem('farewell_messages')) || {};
-                if (!allMessages[recipient]) allMessages[recipient] = [];
-                allMessages[recipient].push(newMsg);
+            // Save to Firebase instead of localStorage
+            const messagesRef = database.ref('farewell_messages/' + recipient);
+            const unreadRef = database.ref('unread_counts/' + recipient);
 
-                let unreadCounts = JSON.parse(localStorage.getItem('unread_counts')) || {};
-                unreadCounts[recipient] = (unreadCounts[recipient] || 0) + 1;
+            messagesRef.push(newMsg)
+                .then(() => {
+                    // Also increment unread count in Firebase
+                    unreadRef.transaction((current) => (current || 0) + 1);
 
-                localStorage.setItem('farewell_messages', JSON.stringify(allMessages));
-                localStorage.setItem('unread_counts', JSON.stringify(unreadCounts));
-
-                // Success
-                successMsg.style.display = 'block';
-                document.getElementById('message').value = '';
-                document.getElementById('sender').value = '';
-                clearAttachment();
-
-                setTimeout(() => successMsg.style.display = 'none', 3000);
-            } catch (e) {
-                // localStorage quota exceeded
-                errorMsg.textContent = 'Storage full! Try sending a smaller file or clear old messages.';
-                errorMsg.style.display = 'block';
-                setTimeout(() => errorMsg.style.display = 'none', 5000);
-            }
-
-            sendBtn.disabled = false;
-            sendBtn.textContent = 'Send Secret Note';
+                    // Success
+                    successMsg.style.display = 'block';
+                    document.getElementById('message').value = '';
+                    document.getElementById('sender').value = '';
+                    clearAttachment();
+                    setTimeout(() => successMsg.style.display = 'none', 3000);
+                })
+                .catch((error) => {
+                    console.error("Firebase Error:", error);
+                    errorMsg.textContent = 'Failed to send message: ' + error.message;
+                    errorMsg.style.display = 'block';
+                    setTimeout(() => errorMsg.style.display = 'none', 5000);
+                })
+                .finally(() => {
+                    sendBtn.disabled = false;
+                    sendBtn.textContent = 'Send Secret Note';
+                });
         });
     </script>
 </body>
