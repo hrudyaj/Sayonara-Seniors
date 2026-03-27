@@ -2,7 +2,7 @@
 const firebaseConfig = {
   apiKey: "AIzaSyAMFCbhqN4C_OktRjOvo88DwQvc1GfyULQ",
   authDomain: "sayonara-seniors-5ccec.firebaseapp.com",
-  databaseURL: "https://sayonara-seniors-5ccec.firebaseio.com",
+  databaseURL: "https://sayonara-seniors-5ccec-default-rtdb.firebaseio.com",
   projectId: "sayonara-seniors-5ccec",
   storageBucket: "sayonara-seniors-5ccec.firebasestorage.app",
   messagingSenderId: "692848207815",
