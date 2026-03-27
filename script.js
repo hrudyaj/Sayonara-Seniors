@@ -299,31 +299,40 @@ if (pressThisBtn && popperSection) {
     }
 
     // Migration logic for one-time move of local data to Firebase
-    function migrateLocalStorageToFirebase() {
+    async function migrateLocalStorageToFirebase() {
         const localMsgs = localStorage.getItem('farewell_messages');
         const localUnread = localStorage.getItem('unread_counts');
 
         if (localMsgs) {
             try {
                 const msgs = JSON.parse(localMsgs);
+                const promises = [];
                 Object.keys(msgs).forEach(recipient => {
                     msgs[recipient].forEach(msg => {
-                        database.ref('farewell_messages/' + recipient).push(msg);
+                        // Push to cloud and track the promise
+                        promises.push(database.ref('farewell_messages/' + recipient).push(msg));
                     });
                 });
-                localStorage.removeItem('farewell_messages');
-                console.log("Messages migrated to Firebase.");
+
+                // Wait for ALL messages to be safely in the cloud
+                if (promises.length > 0) {
+                    await Promise.all(promises);
+                    localStorage.removeItem('farewell_messages');
+                    console.log("Messages successfully migrated to Firebase.");
+                }
             } catch (e) {
-                console.error("Migration error:", e);
+                console.warn("Migration to Firebase failed or partially failed. Local data preserved.", e);
             }
         }
 
         if (localUnread) {
             try {
                 const unread = JSON.parse(localUnread);
+                const unreadPromises = [];
                 Object.keys(unread).forEach(recipient => {
-                    database.ref('unread_counts/' + recipient).set(unread[recipient]);
+                    unreadPromises.push(database.ref('unread_counts/' + recipient).set(unread[recipient]));
                 });
+                await Promise.all(unreadPromises);
                 localStorage.removeItem('unread_counts');
             } catch (e) { }
         }

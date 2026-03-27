@@ -477,6 +477,7 @@
             const newMsg = {
                 id: Date.now(),
                 type: currentType,
+                recipient: recipient, // Added for recovery sync
                 text: currentType === 'text' ? text : '',
                 mediaData: currentType !== 'text' ? attachedFileData : null,
                 mediaName: currentType !== 'text' ? attachedFileName : null,
@@ -484,16 +485,26 @@
                 timestamp: new Date().toISOString()
             };
 
-            // Save to Firebase instead of localStorage
+            // Save to Firebase with a local "Safety Backup"
             const messagesRef = database.ref('farewell_messages/' + recipient);
             const unreadRef = database.ref('unread_counts/' + recipient);
 
+            // Step 1: Backup Locally in case of failure
+            let pending = JSON.parse(localStorage.getItem('pending_messages')) || [];
+            pending.push(newMsg);
+            localStorage.setItem('pending_messages', JSON.stringify(pending));
+
             messagesRef.push(newMsg)
                 .then(() => {
-                    // Also increment unread count in Firebase
+                    // Step 2: Clear from "Safety Backup" on success
+                    let currentPending = JSON.parse(localStorage.getItem('pending_messages')) || [];
+                    let filtered = currentPending.filter(m => m.id !== newMsg.id);
+                    localStorage.setItem('pending_messages', JSON.stringify(filtered));
+
+                    // Step 3: Increment unread count in Firebase
                     unreadRef.transaction((current) => (current || 0) + 1);
 
-                    // Success
+                    // Success UI
                     successMsg.style.display = 'block';
                     document.getElementById('message').value = '';
                     document.getElementById('sender').value = '';
@@ -502,7 +513,7 @@
                 })
                 .catch((error) => {
                     console.error("Firebase Error:", error);
-                    errorMsg.textContent = 'Failed to send message: ' + error.message;
+                    errorMsg.textContent = 'Network error! Your message is saved LOCALLY and will be synced next time you reload.';
                     errorMsg.style.display = 'block';
                     setTimeout(() => errorMsg.style.display = 'none', 5000);
                 })
@@ -511,6 +522,35 @@
                     sendBtn.textContent = 'Send Secret Note';
                 });
         });
+
+        // Automatic Sync for messages that failed previously
+        async function syncPendingMessages() {
+            let pending = JSON.parse(localStorage.getItem('pending_messages')) || [];
+            if (pending.length === 0) return;
+
+            console.log("Attempting to sync " + pending.length + " pending messages...");
+            
+            for (const msg of pending) {
+                try {
+                    const recipient = msg.recipient;
+                    if (!recipient) continue;
+
+                    await database.ref('farewell_messages/' + recipient).push(msg);
+                    await database.ref('unread_counts/' + recipient).transaction(c => (c || 0) + 1);
+                    
+                    // Remove from pending after successful sync
+                    let current = JSON.parse(localStorage.getItem('pending_messages')) || [];
+                    let filtered = current.filter(m => m.id !== msg.id);
+                    localStorage.setItem('pending_messages', JSON.stringify(filtered));
+                    console.log("Synced message: " + msg.id);
+                } catch (e) {
+                    console.warn("Failed to sync message " + msg.id + ". Will try again later.", e);
+                }
+            }
+        }
+
+        // Run sync on load
+        window.addEventListener('load', syncPendingMessages);
     </script>
 </body>
 </html>
