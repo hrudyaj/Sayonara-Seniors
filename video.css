@@ -52,8 +52,6 @@
     height: 95vh;
     max-height: calc(95vh - 60px);
     border: 2px solid #333;
-    filter: sepia(0.3) contrast(1.1);
-    /* Adds retro feel to any video */
 }
 
 .video-caption {

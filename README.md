@@ -29,8 +29,8 @@ Since this is a client-side static web application, there is no convoluted build
 1. Clone or download the repository.
 2. Ensure you have the localized media resources structure intact:
    - `farewell_images/` - Containing subdirectories like `the_gang`, `college_events`, etc.
-   - `IMG_2667.MOV` - The central Memory Lane video file.
    - `music.mp3` - Background gramophone audio.
+   - *Note: The Memory Lane video is externally hosted on Google Drive for performance and storage efficiency.*
 3. Open `index.html` in any modern web browser (Google Chrome, Firefox, Safari).
 
 *Note: For the best experience, host this project using a local server extension (like VS Code's "Live Server") or a static host interface (like GitHub Pages/Netlify) to prevent local file path blocking by standard browser strict CORS policies.*
