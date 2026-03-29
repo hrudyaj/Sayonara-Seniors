@@ -300,13 +300,13 @@
 
 .modal-content {
     background-color: var(--bg-color);
-    margin: 10% auto;
+    margin: 0;
     padding: 0;
     border: 3px solid var(--color-sepia);
     width: 90%;
     max-width: 600px;
     box-shadow: 10px 10px 0px var(--text-primary);
-    opacity: 0;
+    opacity: 1;
 }
 
 .modal-header {

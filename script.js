@@ -83,7 +83,10 @@ function openModal(id) {
 
     modalHeader.style.background = color;
 
-    modal.style.display = "block";
+    modal.style.display = "flex";
+    modal.style.justifyContent = "center";
+    modal.style.alignItems = "flex-start";
+    modal.style.paddingTop = "5%";
 
     // Explicit GSAP FromTo ensures that it resets properly from zero alpha. 
     // This stops it from instantly dissolving/disappearing if clicked multiple times!

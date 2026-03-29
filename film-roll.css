@@ -49,7 +49,7 @@
 
 .film-strip-track {
     display: flex;
-    width: calc(300px * 148);
+    width: calc(300px * 146);
     animation: scrollFilm 185s linear infinite;
 }
 
@@ -80,7 +80,7 @@
     }
 
     100% {
-        transform: translateX(calc(-300px * 74));
+        transform: translateX(calc(-300px * 73));
     }
 }
 
