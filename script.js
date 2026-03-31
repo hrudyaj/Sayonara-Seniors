@@ -1,5 +1,13 @@
-// Initialize GSAP ScrollTrigger
-gsap.registerPlugin(ScrollTrigger);
+// Initialize GSAP ScrollTrigger (guarded - if GSAP CDN fails, rest of site still works)
+let gsapAvailable = false;
+try {
+    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+        gsap.registerPlugin(ScrollTrigger);
+        gsapAvailable = true;
+    }
+} catch (e) {
+    console.warn('GSAP not available, animations disabled:', e);
+}
 
 // Build film roll
 const filmTrack = document.getElementById("dynamic-film-track");
@@ -88,12 +96,13 @@ function openModal(id) {
     modal.style.alignItems = "flex-start";
     modal.style.paddingTop = "5%";
 
-    // Explicit GSAP FromTo ensures that it resets properly from zero alpha. 
-    // This stops it from instantly dissolving/disappearing if clicked multiple times!
-    gsap.fromTo(".modal-content",
-        { y: -50, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.3, ease: "back.out(1.2)" }
-    );
+    // Animate modal in (only if GSAP loaded; content is visible regardless via CSS)
+    if (gsapAvailable) {
+        gsap.fromTo(".modal-content",
+            { y: -30, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.3, ease: "back.out(1.2)" }
+        );
+    }
 }
 
 // Attach clicks to archive cards
@@ -189,21 +198,23 @@ if (spinBtn && rotaryPlate) {
 }
 
 // ----------------------------------------------------
-// Scroll Animations
+// Scroll Animations (only run if GSAP loaded)
 // ----------------------------------------------------
 
-gsap.utils.toArray(".timeline-node").forEach(node => {
-    gsap.from(node, {
-        scrollTrigger: {
-            trigger: node,
-            start: "top 85%"
-        },
-        x: node.classList.contains("left") ? -50 : 50,
-        opacity: 0,
-        duration: 0.8,
-        ease: "power2.out"
+if (gsapAvailable) {
+    gsap.utils.toArray(".timeline-node").forEach(node => {
+        gsap.from(node, {
+            scrollTrigger: {
+                trigger: node,
+                start: "top 85%"
+            },
+            x: node.classList.contains("left") ? -50 : 50,
+            opacity: 0,
+            duration: 0.8,
+            ease: "power2.out"
+        });
     });
-});
+}
 
 // ----------------------------------------------------
 // Final Section: Confetti & 'Brighter Dark' Finale
@@ -343,6 +354,20 @@ if (pressThisBtn && popperSection) {
 
     migrateLocalStorageToFirebase();
 
+    // Force unread notifications to reflect actual letter counts (run once locally for the user)
+    if (localStorage.getItem('messages_forced_unread_v1') !== 'true') {
+        database.ref('farewell_messages').once('value').then((snapshot) => {
+            const msgs = snapshot.val() || {};
+            const unreadUpdates = {};
+            Object.keys(passwords).forEach(person => {
+                unreadUpdates[person] = msgs[person] ? Object.keys(msgs[person]).length : 0;
+            });
+            database.ref('unread_counts').update(unreadUpdates).then(() => {
+                localStorage.setItem('messages_forced_unread_v1', 'true');
+            });
+        }).catch(err => console.error("Could not sync unread counts", err));
+    }
+
     function updateBadges() {
         database.ref('unread_counts').on('value', (snapshot) => {
             const unread = snapshot.val() || {};
@@ -415,8 +440,16 @@ if (pressThisBtn && popperSection) {
 
         messageList.innerHTML = '<div class="no-messages">Loading letters...</div>';
 
+        // Safety timeout — if Firebase doesn't respond in 10s, show an error
+        var loadTimeout = setTimeout(function () {
+            if (messageList.innerHTML.includes('Loading letters')) {
+                messageList.innerHTML = '<div class="no-messages" style="color:#c0392b;">⚠️ Could not connect to the mailbox. Please check your internet connection and try again.</div>';
+            }
+        }, 10000);
+
         // Listen for messages for this specific recipient in real-time
         database.ref('farewell_messages/' + currentRecipient).on('value', (snapshot) => {
+            clearTimeout(loadTimeout);
             const data = snapshot.val();
             const myMessages = data ? Object.values(data) : [];
 
@@ -453,6 +486,11 @@ if (pressThisBtn && popperSection) {
                 });
                 messageList.appendChild(card);
             });
+        }, (error) => {
+            // Firebase denied the read (rules, quota, or auth issue)
+            clearTimeout(loadTimeout);
+            console.error('Firebase read error:', error.code, error.message);
+            messageList.innerHTML = '<div class="no-messages" style="color:#c0392b;">⚠️ Could not load letters. Database access was denied.<br><small style="opacity:0.7;">Error: ' + error.code + '</small></div>';
         });
     }
 
